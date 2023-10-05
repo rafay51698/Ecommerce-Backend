@@ -17,8 +17,8 @@ app.use(bodyParser.json());
 app.use(morgan('tiny')); 
 
 //router
-const productRouter = require('./router/product')
-const categoryRouter = require('./router/category')
+const productRouter = require('./router/products')
+const categoryRouter = require('./router/categories')
 
 
 //routers

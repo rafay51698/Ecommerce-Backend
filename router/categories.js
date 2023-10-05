@@ -31,9 +31,9 @@ router.put('/:id', async (req, res) => {
         name: req.body.name,
         icon: req.body.icon,
         color: req.body.color 
-    }) 
+    },{new: true})
     if (!category)
-        return res.status(400).send('the category cannot be created')
+        return res.status(400).json({message: 'the category cannot be created'},),
 
     res.send(category);
 });
