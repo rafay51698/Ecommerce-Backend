@@ -4,7 +4,6 @@ const router = express.Router();
 const { Product } = require("../models/product");
 const { Category } = require("../models/category");
 const mongoose = require("mongoose");
-const mongoose = require("mongoose");
 
 router.get("/", async (req, res) => {
   let = filter = {};
