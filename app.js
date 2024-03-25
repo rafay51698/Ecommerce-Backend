@@ -24,11 +24,12 @@ app.use(errorHandler);
 const productRouter = require("./router/products");
 const categoryRouter = require("./router/categories");
 const userRouter = require("./router/user");
-
+const ordersRoutes = require("./router/orders");
 //routers
 app.use(`${api}/products`, productRouter);
 app.use(`${api}/categories`, categoryRouter);
 app.use(`${api}/users`, userRouter);
+app.use(`${api}/orders`, ordersRoutes);
 
 mongoose
   .connect(process.env.CONNECTION_STRING, { dbName: "eshop-db" })
