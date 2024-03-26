@@ -1,10 +1,10 @@
 const express = require("express");
 const router = express.Router();
-
 const { Product } = require("../models/product");
 const { Category } = require("../models/category");
 const mongoose = require("mongoose");
-
+const cloudinary = require("../helpers/cloudinary");
+const upload = require("../helpers/upload-image");
 router.get("/", async (req, res) => {
   let = filter = {};
 
@@ -33,30 +33,55 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
-  const category = await Category.findById(req.body.category);
-  if (!category)
-    return res
-      .status(400)
-      .json({ success: false, message: "Invalid Category" });
+router.post("/", upload.single("image"), async function (req, res) {
+  cloudinary.uploader.upload(req.file.path, async (err, result) => {
+    if (err) {
+      console.log(err);
+      return res.status(500).json({
+        success: false,
+        message: "Error",
+      });
+    }
+    ///
+    ///
+    ///
+    const category = await Category.findById(req.body.category);
+    if (!category)
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid Category" });
 
-  let product = new Product({
-    name: req.body.name,
-    description: req.body.description,
-    richDescription: req.body.richDescription,
-    image: req.body.image,
-    brand: req.body.brand,
-    price: req.body.price,
-    category: req.body.category,
-    countInStock: req.body.countInStock,
-    rating: req.body.rating,
-    numReviews: req.body.numReviews,
-    isFeatured: req.body.isFeatured,
+    let product = new Product({
+      name: req.body.name,
+      description: req.body.description,
+      richDescription: req.body.richDescription,
+      image: result.url,
+      brand: req.body.brand,
+      price: req.body.price,
+      category: req.body.category,
+      countInStock: req.body.countInStock,
+      rating: req.body.rating,
+      numReviews: req.body.numReviews,
+      isFeatured: req.body.isFeatured,
+    });
+    ///
+    ///
+    ///
+    product = await product.save();
+    ///
+    ///
+    ///
+    if (!product) {
+      return res.status(500).json({ message: "Product cannot be created" });
+    }
+    // res.send(product);
+    res.status(200).json({
+      success: true,
+      message: "Uploaded!",
+      product,
+    });
   });
-  product = await product.save();
-  if (!product)
-    return res.status(500).json({ message: "Product cannot be created" });
-  res.send(product);
+
   // res.send(product);
 });
 
